@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const cloudinary = require('cloudinary').v2;
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.createProduct = async (req, res) => {
     try {
@@ -37,7 +38,7 @@ exports.createProduct = async (req, res) => {
             product,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 };
 
@@ -89,7 +90,7 @@ exports.updateProduct = async (req, res) => {
         }
 
         product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
+            returnDocument: 'after',
             runValidators: true
         });
         res.status(200).json({
@@ -98,11 +99,7 @@ exports.updateProduct = async (req, res) => {
         });
     }
     catch (error) {
-        if (error.name === 'ValidationError') {
-            const messages = Object.values(error.errors).map(val => val.message);
-            return res.status(400).json({ success: false, message: messages });
-        }
-        res.status(500).json({ message: "Server Error" });
+        next(error);
     }
 }
 
@@ -112,7 +109,6 @@ exports.deleteProduct = async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({
-                success: false,
                 message: "Product not found"
             });
         }
@@ -131,6 +127,115 @@ exports.deleteProduct = async (req, res) => {
         });
     }
     catch (error) {
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({ message: "Server Error: " + error.message });
     }
+};
+
+exports.getSingleProduct = async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+        res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({
+        success: true,
+        product
+    });
 }
+
+exports.getProducts = async (req, res) => {
+    const resPerPage = 8;
+
+    const apiFeatures = new APIFeatures(Product.find(), req.query)
+        .search()
+        .filter()
+        .sort()
+        .pagination(resPerPage);
+    
+    const products = await apiFeatures.query
+
+    res.status(200).json({
+        success: true,
+        products
+    });
+}
+
+exports.createProductReview = async (req, res) => {
+    const { rating, comment, productId } = req.body;
+
+    const product = await Product.findById(productId);
+
+    const existingReview = product.reviews.find(
+        (rev) => rev.user.toString() === req.user._id.toString()
+    );
+
+    if (existingReview) {
+        product.reviews.forEach((rev) => {
+            if (rev.user.toString() === req.user._id.toString()) {
+                rev.rating = rating;
+                rev.comment = comment;
+            }
+        });
+    } else { //new review
+        const review = {
+            user: req.user._id,
+            name: req.user.name,
+            rating: Number(rating),
+            comment
+        };
+        product.reviews.push(review);
+        product.numOfReviews = product.reviews.length;
+    }
+
+    //Recalculate Average Rating
+    product.rating = product.reviews.reduce((accumulator, review) => 
+        { accumulator + review.rating; }, 0) / product.reviews.length;
+
+    //skip checks on unrelated fields (like product description)
+    await product.save({ validateBeforeSave: false });
+    
+    res.status(200).json({ success: true });
+}
+
+//used by frontend to display reviews under product
+exports.getProductReviews = async (req, res) => {
+    const product = await Product.findById(req.query.productId);
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({
+        success: true,
+        reviews: product.reviews
+    });
+}
+
+exports.deleteReview = async (req, res) => {
+    const product = await Product.findById(req.query.productId);
+    if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+    }
+
+    //filter out review we want to delete
+    const reviews = product.reviews.filter(
+        (rev) => rev._id.toString() !== req.query.reviewId.toString()
+    );
+
+    const numOfReviews = reviews.length;
+
+    //Recalculate Average Rating
+    //Use ternary (? : ) to avoid "Division by Zero" in case we deleted last review
+    const rating = reviews.length === 0 ? 0 
+        : reviews.reduce((accumulator, review) => accumulator + review.rating, 0) / reviews.length;
+
+    await Product.findByIdAndUpdate(req.query.productId, {
+        reviews,
+        rating,
+        numOfReviews
+    }, {
+        returnDocument: 'after',
+        runValidators: true
+    });
+
+    res.status(200).json({ success: true });
+}
+

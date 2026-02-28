@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
             name,
             email,
             password,
-            role: "admin"
+            role: "customer"
         });
 
         //3. Generate JWT token to immediately log them in

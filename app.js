@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const productRoutes = require('./src/routes/product');
 const userRoutes = require('./src/routes/user');
+const errorMiddleware = require('./middleware/error')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cloudinary = require('cloudinary').v2;
 
@@ -13,15 +14,17 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const app = express()
+const app = express();
 
 // Allows the server to understand JSON sent by the frontend
-app.use(cors())
+app.use(cors());
 app.use(express.json());
+app.set('query parser', 'extended');
 
 //Prefix all product/user routes with '/api'
 app.use('/api', productRoutes);
 app.use('/api', userRoutes);
+app.use(errorMiddleware);
 
 if (!process.env.JWT_SECRET) {
     console.error("FATAL ERROR: JWT_SECRET is not defined.");

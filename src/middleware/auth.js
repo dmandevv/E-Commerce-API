@@ -30,7 +30,7 @@ exports.authorizeUserMiddleware = async (req, res, next) => {
 
 exports.authorizeRolesMiddleware = (...roles) => {
     return (req, res, next) => {
-        //req.user was set my authorizeUserMiddleware
+        //req.user was set by authorizeUserMiddleware
         if (!roles.includes(req.user.role)) {
             return res.status(403).json({
                 success: false,

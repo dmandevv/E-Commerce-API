@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const productRoutes = require('./src/api/routes/product');
 const userRoutes = require('./src/api/routes/user');
 const orderRoutes = require('./src/api/routes/order');
-const errorMiddleware = require('./middleware/error')
+const errorMiddleware = require('./src/middleware/error')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cloudinary = require('cloudinary').v2;
 
@@ -42,8 +42,12 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.log("Error connecting to MongoDB: ", err));
 
-//Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log("Server is running on port ${PORT}");
-});
+
+//Start Server LOCALLY
+//const PORT = process.env.PORT || 5000;
+//app.listen(PORT, () => {
+//    console.log("Server is running on port ${PORT}");
+//});
+
+//Hosting on Vercel
+module.exports = app;

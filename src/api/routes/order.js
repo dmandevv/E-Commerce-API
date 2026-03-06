@@ -7,16 +7,17 @@ const {
     updateOrderStatus,
     getAllOrders
 } = require('../../controllers/orderController');
+const { connectDB } = require('../../app')
 
 const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('../../middleware/auth');
 
 // User routes
-router.post('/order', authorizeUserMiddleware, createOrder);
-router.get('/orders', authorizeUserMiddleware, getUserOrders);
-router.get('/order/:orderId', authorizeUserMiddleware, getOrderByID);
+router.post('/order', connectDB,  authorizeUserMiddleware, createOrder);
+router.get('/orders', connectDB, authorizeUserMiddleware, getUserOrders);
+router.get('/order/:orderId', connectDB, authorizeUserMiddleware, getOrderByID);
 
 // Admin routes
-router.get('/admin/orders', authorizeUserMiddleware, authorizeRolesMiddleware('admin'), getAllOrders);
-router.patch('/admin/order/:orderId', authorizeUserMiddleware, authorizeRolesMiddleware('admin'), updateOrderStatus);
+router.get('/admin/orders', connectDB, authorizeUserMiddleware, authorizeRolesMiddleware('admin'), getAllOrders);
+router.patch('/admin/order/:orderId', connectDB, authorizeUserMiddleware, authorizeRolesMiddleware('admin'), updateOrderStatus);
 
 module.exports = router;

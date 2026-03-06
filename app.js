@@ -17,8 +17,11 @@ cloudinary.config({
 
 const app = express();
 
-// Allows the server to understand JSON sent by the frontend
-app.use(cors());
+// Allows the server to understand JSON sent by the frontend (ONLY my domain)
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true // Helpful if you plan to use cookies for auth later
+}));
 
 // Webhook endpoint needs raw body
 app.use('/api/webhook', express.raw({ type: 'application/json' }));
@@ -37,11 +40,24 @@ if (!process.env.JWT_SECRET) {
     process.exit(1); // Stop the server immediately
 }
 
-//Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((err) => console.log("Error connecting to MongoDB: ", err));
+//Connect to MongoDB middleware
+const connectDB = async(req, res, next) => {
+    if (mongoose.connection.readyState >= 1) {
+        return; // We are already connected (readyState 0 means not connected)
+    }
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connected to MongoDB");
+        next(); // Connection successful, move to the controller
+    } catch (err) {
+        console.error("Database connection error:", err);
+        return res.status(500).json({ message: 'Database connection failed' });
+    }
+};
 
+app.get('/', (req, res) => {
+  res.send('API is running successfully on Vercel!');
+});
 
 //Start Server LOCALLY
 //const PORT = process.env.PORT || 5000;

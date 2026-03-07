@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { login, register, createCheckoutSession } = require('#src/api/controllers/userController');
-const { authorizeUserMiddleware } = require('#src/api/middleware/auth');
+const { login, register, createCheckoutSession } = require('#api/index').controllers.UserController;
+const { authorizeUserMiddleware } = require('#api/index').middleware.auth;
 const { connectDB } = require('#app')
 
 router.post('/register', connectDB, register);

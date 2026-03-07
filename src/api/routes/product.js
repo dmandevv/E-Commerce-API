@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { createProduct, updateProduct, deleteProduct, getSingleProduct, createProductReview, getProductReviews, deleteReview, getProducts } = require('#src/api/controllers/productController');
-const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('#src/api/middleware/auth');
+const { createProduct, updateProduct, deleteProduct, getSingleProduct, createProductReview, getProductReviews, deleteReview, getProducts } = require('#api/index').controllers.ProductController;
+const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('#api/index').middleware.auth;
 const { connectDB } = require('#app')
 
 //User endpoints

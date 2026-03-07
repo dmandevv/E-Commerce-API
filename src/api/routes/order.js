@@ -6,10 +6,10 @@ const {
     getOrderByID,
     updateOrderStatus,
     getAllOrders
-} = require('#src/api/controllers/orderController');
+} = require('#api/index').controllers.OrderController;
 const { connectDB } = require('#app')
 
-const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('#src/api/middleware/auth');
+const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('#api/index').middleware.auth;
 
 // User routes
 router.post('/order', connectDB,  authorizeUserMiddleware, createOrder);

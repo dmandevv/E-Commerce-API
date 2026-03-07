@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('#api/index').models.User;
+
 
 exports.authorizeUserMiddleware = async (req, res, next) => {
     console.log("Headers:", req.headers);

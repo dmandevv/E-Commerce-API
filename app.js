@@ -2,10 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const productRoutes = require('#src/api/routes/product');
-const userRoutes = require('#src/api/routes/user');
-const orderRoutes = require('#src/api/routes/order');
-const errorMiddleware = require('#src/api/middleware/error')
+const { routes } = require('#api/index');
+const { middleware } = require('#api/index');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cloudinary = require('cloudinary').v2;
 
@@ -30,10 +28,10 @@ app.use(express.json());
 app.set('query parser', 'extended');
 
 //Prefix all routes with '/api'
-app.use('/api', productRoutes);
-app.use('/api', userRoutes);
-app.use('/api', orderRoutes);
-app.use(errorMiddleware);
+app.use('/api', routes.user);
+app.use('/api', routes.product);
+app.use('/api', routes.order);
+app.use(middleware.error);
 
 if (!process.env.JWT_SECRET) {
     console.error("FATAL ERROR: JWT_SECRET is not defined.");

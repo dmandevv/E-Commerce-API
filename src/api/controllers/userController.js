@@ -1,7 +1,8 @@
-const User = require('../models/User');
+const User = require('#api/index').models.User;
+const Product = require('#api/index').models.Product;
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Product = require('../models/Product');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.register = async (req, res) => {

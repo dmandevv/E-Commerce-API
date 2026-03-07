@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "E-Commerce API",
   "main": "app.js",
+  "imports": {
+    "#app": "./app.js",
+    "#src/*": "./src/*.js"
+  },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"

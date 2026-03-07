@@ -2,10 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const productRoutes = require('./src/api/routes/product');
-const userRoutes = require('./src/api/routes/user');
-const orderRoutes = require('./src/api/routes/order');
-const errorMiddleware = require('./src/middleware/error')
+const productRoutes = require('#src/api/routes/product');
+const userRoutes = require('#src/api/routes/user');
+const orderRoutes = require('#src/api/routes/order');
+const errorMiddleware = require('#src/api/middleware/error')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cloudinary = require('cloudinary').v2;
 
@@ -43,7 +43,7 @@ if (!process.env.JWT_SECRET) {
 //Connect to MongoDB middleware
 const connectDB = async(req, res, next) => {
     if (mongoose.connection.readyState >= 1) {
-        return; // We are already connected (readyState 0 means not connected)
+        return next(); // We are already connected (readyState 0 means not connected)
     }
     try {
         await mongoose.connect(process.env.MONGO_URI);

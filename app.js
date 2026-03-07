@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const { routes } = require('#api/index');
 const { middleware } = require('#api/index');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -38,20 +37,7 @@ if (!process.env.JWT_SECRET) {
     process.exit(1); // Stop the server immediately
 }
 
-//Connect to MongoDB middleware
-const connectDB = async(req, res, next) => {
-    if (mongoose.connection.readyState >= 1) {
-        return next(); // We are already connected (readyState 0 means not connected)
-    }
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("Connected to MongoDB");
-        next(); // Connection successful, move to the controller
-    } catch (err) {
-        console.error("Database connection error:", err);
-        return res.status(500).json({ message: 'Database connection failed' });
-    }
-};
+
 
 app.get('/', (req, res) => {
   res.send('API is running successfully on Vercel!');

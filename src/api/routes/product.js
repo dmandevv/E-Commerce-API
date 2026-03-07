@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { createProduct, updateProduct, deleteProduct, getSingleProduct, createProductReview, getProductReviews, deleteReview, getProducts } = require('#api/index').controllers.ProductController;
 const { authorizeUserMiddleware, authorizeRolesMiddleware } = require('#api/index').middleware.auth;
-const { connectDB } = require('#app')
+const { connectDB } = require('#api/index').middleware.database;
 
 //User endpoints
 router.route('/product/:id').get(connectDB, getSingleProduct);

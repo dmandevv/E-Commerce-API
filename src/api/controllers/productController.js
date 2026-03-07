@@ -1,6 +1,6 @@
 const Product = require('#api/index').models.Product;
+const { utils } = require('#api/index').utils;
 const cloudinary = require('cloudinary').v2;
-const APIFeatures = require('#api/index').utils.APIFeatures;
 
 exports.createProduct = async (req, res) => {
     try {
@@ -145,7 +145,7 @@ exports.getSingleProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     const resPerPage = 8;
 
-    const apiFeatures = new APIFeatures(Product.find(), req.query)
+    const apiFeatures = new utils.APIFeatures(Product.find(), req.query)
         .search()
         .filter()
         .sort()

@@ -5,7 +5,12 @@
   "main": "app.js",
   "imports": {
     "#app": "./app.js",
-    "#api/*": "./src/api/*.js"
+    "#api/*": "./src/api/*.js",
+    "#controllers/*": "./src/api/controllers/*.js",
+    "#middleware/*": "./src/api/middleware/*.js",
+    "#models/*": "./src/api/models/*.js",
+    "#routes/*": "./src/api/routes/*.js",
+    "#utils/*": "./src/api/utils/*.js"
   },
   "scripts": {
     "start": "node app.js",

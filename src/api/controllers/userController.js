@@ -1,6 +1,5 @@
-const { models } = require('#api/index');
-const User = models.User;
-const Product = models.Product;
+const User = require('#models/User');
+const Product = require('#models/Product');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

@@ -1,5 +1,4 @@
-const { models } = require('#api/index').models;
-const Product = models.Product;
+const Product = require('#models/Product');
 
 const { utils } = require('#api/index').utils;
 const cloudinary = require('cloudinary').v2;

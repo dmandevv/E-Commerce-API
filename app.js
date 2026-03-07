@@ -1,8 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { routes } = require('#api/index');
-const { middleware } = require('#api/index');
+const routes = {
+    user: require('#routes/user'),
+    product: require('#routes/product'),
+    order: require('#routes/order')
+};
+const middleware = {
+    error: require('#middleware/error')
+};
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const cloudinary = require('cloudinary').v2;
 

@@ -37,8 +37,6 @@ if (!process.env.JWT_SECRET) {
     process.exit(1); // Stop the server immediately
 }
 
-
-
 app.get('/', (req, res) => {
   res.send('API is running successfully on Vercel!');
 });

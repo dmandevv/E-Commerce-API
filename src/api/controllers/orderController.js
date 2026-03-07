@@ -1,6 +1,6 @@
-
-const Product = require('#api/index').models.Product;
-const Order = require('#api/index').models.Order;
+const { models } = require('#api/index').models;
+const Product = models.Product;
+const Order = models.Order;
 
 // Create a new order - called after successful Stripe payment
 // Take cart items from frontend and saves them as complete order in the database

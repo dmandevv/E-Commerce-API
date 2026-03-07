@@ -1,8 +1,8 @@
 module.exports = {
   models: {
-    user: require('./models/User.js'),
-    product: require('./models/Product.js'),
-    order: require('./models/Order.js'),
+    User: require('./models/User.js'),
+    Product: require('./models/Product.js'),
+    Order: require('./models/Order.js'),
   },
   controllers: {
     user: require('./controllers/userController.js'),

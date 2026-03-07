@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const connectDB = async(req, res, next) => {
+exports.connectDB = async(req, res, next) => {
     if (mongoose.connection.readyState >= 1) {
         return next(); // We are already connected (readyState 0 means not connected)
     }

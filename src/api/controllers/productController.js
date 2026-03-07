@@ -1,5 +1,5 @@
 const Product = require('#models/Product');
-const APIFeatures = require('#utils/APIFeatures'); //APIFeatures class for search, filter, pagination, etc.
+const APIFeatures = require('#utils/apiFeatures'); //APIFeatures class for search, filter, pagination, etc.
 const cloudinary = require('cloudinary').v2;
 
 exports.createProduct = async (req, res) => {

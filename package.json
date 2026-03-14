@@ -1,37 +1,31 @@
 {
-  "name": "ecommerce-api",
+  "name": "ecommerce-platform",
   "version": "1.0.0",
-  "description": "E-Commerce API",
-  "main": "app.js",
-  "imports": {
-    "#app": "./app.js",
-    "#api/*": "./src/api/*.js",
-    "#controllers/*": "./src/api/controllers/*.js",
-    "#middleware/*": "./src/api/middleware/*.js",
-    "#models/*": "./src/api/models/*.js",
-    "#routes/*": "./src/api/routes/*.js",
-    "#utils/*": "./src/api/utils/*.js"
-  },
+  "private": true,
+  "workspaces": [
+    "shared",
+    "services/cart-service",
+    "services/notification-service",
+    "services/order-service",
+    "services/payment-service",
+    "services/product-service",
+    "services/user-service"
+  ],
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cloudinary": "^2.9.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.2.2",
-    "qs": "^6.15.0",
-    "stripe": "^20.4.0",
-    "validator": "^13.15.26"
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "prisma:generate:order": "cd services/order-service && npx prisma generate && echo '{\"name\":\"@prisma/order-client\",\"main\":\"./index.js\",\"types\":\"./index.d.ts\"}' > node_modules/@prisma/order-client/package.json",
+    "prisma:generate:payment": "cd services/payment-service && npx prisma generate && echo '{\"name\":\"@prisma/payment-client\",\"main\":\"./index.js\",\"types\":\"./index.d.ts\"}' > node_modules/@prisma/payment-client/package.json",
+    "prisma:generate": "npm run prisma:generate:order && npm run prisma:generate:payment",
+    "postinstall": "if [ -d services/order-service ]; then npm run prisma:generate:order; fi && if [ -d services/payment-service ]; then npm run prisma:generate:payment; fi"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "@types/node": "^25.4.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "redis": "^5.11.0",
+    "stripe": "^20.4.1"
   }
 }

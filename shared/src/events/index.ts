@@ -1,0 +1,72 @@
+// ─── Event Names ────────────────────────────────────────
+// String literal union prevents typos in event routing
+export const EventNames = {
+  // User events
+  USER_REGISTERED: 'user.registered',
+  USER_UPDATED: 'user.updated',
+
+  // Product events
+  PRODUCT_CREATED: 'product.created',
+  PRODUCT_UPDATED: 'product.updated',
+  PRODUCT_DELETED: 'product.deleted',
+  STOCK_UPDATED: 'stock.updated',
+
+  // Cart events
+  CART_CHECKED_OUT: 'cart.checked_out',
+
+  // Order events
+  ORDER_PLACED: 'order.placed',
+  ORDER_STATUS_UPDATED: 'order.status_updated',
+
+  // Payment events
+  PAYMENT_COMPLETED: 'payment.completed',
+  PAYMENT_FAILED: 'payment.failed',
+} as const;
+
+export type EventName = typeof EventNames[keyof typeof EventNames];
+
+// ─── Event Payloads ─────────────────────────────────────
+export interface UserRegisteredEvent {
+  userId: string;
+  email: string;
+  name: string;
+  timestamp: Date;
+}
+
+export interface OrderPlacedEvent {
+  orderId: string;
+  userId: string;
+  items: Array<{ productId: string; quantity: number; price: number }>;
+  total: number;
+  timestamp: Date;
+}
+
+export interface PaymentCompletedEvent {
+  orderId: string;
+  userId: string;
+  stripePaymentId: string;
+  amount: number;
+  timestamp: Date;
+}
+
+export interface PaymentFailedEvent {
+  orderId: string;
+  userId: string;
+  reason: string;
+  timestamp: Date;
+}
+
+export interface StockUpdatedEvent {
+  productId: string;
+  previousStock: number;
+  newStock: number;
+  timestamp: Date;
+}
+
+export interface OrderStatusUpdatedEvent {
+  orderId: string;
+  userId: string;
+  previousStatus: string;
+  newStatus: string;
+  timestamp: Date;
+}

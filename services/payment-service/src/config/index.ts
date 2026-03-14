@@ -1,0 +1,41 @@
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: resolve(__dirname, '../../.env'), override: true });
+
+interface Config {
+  port: number;
+  databaseUrl: string;
+  jwtSecret: string;
+  rabbitmqUrl: string;
+  stripeSecretKey: string;
+  stripeWebhookSecret: string;
+}
+
+export const config: Config = {
+  port: parseInt(process.env.PORT || '3005', 10),
+  databaseUrl: process.env.DATABASE_URL || '',
+  jwtSecret: process.env.JWT_SECRET || '',
+  rabbitmqUrl: process.env.RABBITMQ_URL || 'amqp://admin:admin_password@localhost:5672',
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+};
+
+if (!config.jwtSecret) {
+  console.error('FATAL: JWT_SECRET is not defined');
+  process.exit(1);
+}
+
+if (!config.databaseUrl) {
+  console.error('FATAL: DATABASE_URL is not defined');
+  process.exit(1);
+}
+
+if (!config.stripeSecretKey) {
+  console.error('FATAL: STRIPE_SECRET_KEY is not defined');
+  process.exit(1);
+}
